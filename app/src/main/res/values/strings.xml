@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Not Twitter</string>
+    <string name="login_label">Log in</string>
+    <string name="intent_scheme">oauth</string>
+    <string name="intent_host">cprest</string>
+    <string name="compose">compose</string>
+    <string name="now">Now</string>
+    <string name="tweet">TWEET</string>
+    <string name="compose_tweet">Compose Tweet</string>
+    <string name="failure">Something when wrong</string>
+    <string name="success">Great Success!</string>
+    <string name="this_is_definitely_not_twitter">This is definitely not Twitter</string>
+
+</resources>

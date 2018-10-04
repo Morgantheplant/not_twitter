@@ -1,0 +1,16 @@
+<resources>
+
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#00A064</item>
+        <item name="colorPrimaryDark">#ed4b00</item>
+        <item name="colorAccent">#B30000</item>
+        <item name="android:textColorSecondary">#eff0f1</item>
+        <item name="android:editTextColor">#eff0f1</item>
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+
+</resources>
