@@ -4,22 +4,29 @@ import android.text.format.DateUtils;
 
 import com.codepath.apps.restclienttemplate.constants.DateAbbreviation;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class Tweet {
     public String body;
-    public long uid;
+
+    public long getPostId() {
+        return postId;
+    }
+
+    public long postId;
     public String createdAt;
     public User user;
     public static Tweet fromJSON(JSONObject jsonObject) throws JSONException {
         Tweet tweet = new Tweet();
         tweet.body = jsonObject.getString("text");
-        tweet.uid = jsonObject.getLong("id");
+        tweet.postId = jsonObject.getLong("id");
         tweet.createdAt = getRelativeTimeAgo(jsonObject.getString("created_at"));
         tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
         return tweet;
@@ -30,8 +37,21 @@ public class Tweet {
     public Tweet(String body, long uid, String createdAt, User user){
         this.body = body;
         this.createdAt = createdAt;
-        this.uid = uid;
+        this.postId = uid;
         this.user = user;
+    }
+
+    public static ArrayList<Tweet> fromJSONArray(JSONArray response){
+        ArrayList<Tweet> tweets = new ArrayList<>();
+        for (int i = 0; i < response.length(); i++){
+            try {
+                Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
+                tweets.add(tweet);
+            } catch (JSONException e){
+                e.printStackTrace();
+            }
+        }
+        return tweets;
     }
 
     public static String getRelativeTimeAgo(String rawJsonDate) {

@@ -38,7 +38,7 @@ public class TimelineActivity extends AppCompatActivity {
         client = TwitterApplication.getRestClient(this);
         rvTweets = findViewById(R.id.rvTweet);
         tweets = new ArrayList<>();
-        tweetAdapter = new TweetAdapter(tweets);
+        tweetAdapter = new TweetAdapter();
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(tweetAdapter);
         populateTimeline();
@@ -80,14 +80,14 @@ public class TimelineActivity extends AppCompatActivity {
 
 
     private void populateTimeline(){
-        client.getHomeTimeline(new JsonHttpResponseHandler(){
+        client.getHomeTimeline(1, 25, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 for (int i = 0; i < response.length(); i++){
                     try {
                         Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
                         tweets.add(tweet);
-                        tweetAdapter.notifyItemChanged(tweets.size() - 1);
+                        tweetAdapter.addMoreTweets(tweets);
                     } catch (JSONException e){
                         e.printStackTrace();
                     }
