@@ -1,5 +1,7 @@
 package com.codepath.apps.restclienttemplate.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.format.DateUtils;
 
 import com.codepath.apps.restclienttemplate.constants.DateAbbreviation;
@@ -13,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class Tweet {
+public class Tweet implements Parcelable {
     public String body;
 
     public long getPostId() {
@@ -23,12 +25,17 @@ public class Tweet {
     public long postId;
     public String createdAt;
     public User user;
-    public static Tweet fromJSON(JSONObject jsonObject) throws JSONException {
+    public static Tweet fromJSON(JSONObject jsonObject)  {
         Tweet tweet = new Tweet();
-        tweet.body = jsonObject.getString("text");
-        tweet.postId = jsonObject.getLong("id");
-        tweet.createdAt = getRelativeTimeAgo(jsonObject.getString("created_at"));
-        tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
+        try {
+            tweet.body = jsonObject.getString("text");
+            tweet.postId = jsonObject.getLong("id");
+            tweet.createdAt = getRelativeTimeAgo(jsonObject.getString("created_at"));
+            tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
+            return tweet;
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
         return tweet;
     }
 
@@ -84,6 +91,43 @@ public class Tweet {
         }
         return (span / DateUtils.MINUTE_IN_MILLIS) + DateAbbreviation.ABBR_MINUTE;
     }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeString(body);
+        out.writeLong(postId);
+        out.writeString(createdAt);
+        out.writeParcelable(user, flags);
+    }
+
+    private Tweet(Parcel in) {
+        body = in.readString();
+        postId = in.readLong();
+        createdAt = in.readString();
+        user = in.readParcelable(User.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Parcelable.Creator<Tweet> CREATOR
+            = new Parcelable.Creator<Tweet>() {
+
+        // This simply calls our new constructor (typically private) and
+        // passes along the unmarshalled `Parcel`, and then returns the new object!
+        @Override
+        public Tweet createFromParcel(Parcel in) {
+            return new Tweet(in);
+        }
+
+        // We just need to copy this and change the type to match our class.
+        @Override
+        public Tweet[] newArray(int size) {
+            return new Tweet[size];
+        }
+    };
 
 
 }

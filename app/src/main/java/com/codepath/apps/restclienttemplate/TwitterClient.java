@@ -41,21 +41,21 @@ public class TwitterClient extends OAuthBaseClient {
 						context.getString(R.string.intent_scheme), context.getPackageName(), FALLBACK_URL));
 	}
 
-	public void getHomeTimeline(long since_id, int count, AsyncHttpResponseHandler handler) {
+	public void getHomeTimeline(long max_id, int count, AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
 		params.put("count", count);
-		params.put("since_id", since_id);
+		if(max_id != 0){
+			params.put("max_id", max_id);
+		}
 		client.get(apiUrl, params, handler);
 	}
+
 
 	public void composeTweet(String tweet, String to, AsyncHttpResponseHandler handler){
 		String apiUrl = getApiUrl("statuses/update.json");
 		RequestParams params = new RequestParams();
-//		if(to.length() > 0){
-//			params.put("in_reply_to_status_id", to);
-//		}
 		params.put("status", tweet);
 		client.post(apiUrl, params, handler);
 	}

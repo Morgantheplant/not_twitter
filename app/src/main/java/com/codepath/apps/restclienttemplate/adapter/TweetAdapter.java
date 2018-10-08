@@ -1,8 +1,8 @@
 package com.codepath.apps.restclienttemplate.adapter;
 
+import android.arch.paging.PagedListAdapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.recyclerview.extensions.ListAdapter;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,22 +17,14 @@ import com.bumptech.glide.request.RequestOptions;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
-public class TweetAdapter extends ListAdapter<Tweet, TweetAdapter.ViewHolder> {
-    private List<Tweet> mTweets = new ArrayList<>();
+public class TweetAdapter extends PagedListAdapter<Tweet, TweetAdapter.ViewHolder> {
 
     public TweetAdapter() {
         super(DIFF_CALLBACK);
     }
 
-    public void addMoreTweets(List<Tweet> newTweets) {
-        mTweets.addAll(newTweets);
-        submitList(mTweets); // DiffUtil takes care of the check
-    }
 
     public static final DiffUtil.ItemCallback<Tweet> DIFF_CALLBACK = new DiffUtil.ItemCallback<Tweet>() {
                 @Override
@@ -61,6 +53,9 @@ public class TweetAdapter extends ListAdapter<Tweet, TweetAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Tweet tweet = getItem(position);
+        if(tweet == null){
+            return;
+        }
         holder.tvUsername.setText(tweet.user.name);
         holder.tvBody.setText(tweet.body);
         holder.tvTimestamp.setText(tweet.createdAt);

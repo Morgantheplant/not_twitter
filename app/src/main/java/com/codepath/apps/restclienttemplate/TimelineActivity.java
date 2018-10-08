@@ -1,5 +1,9 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.paging.LivePagedListBuilder;
+import android.arch.paging.PagedList;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,26 +12,20 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.activities.ComposeActivity;
 import com.codepath.apps.restclienttemplate.adapter.TweetAdapter;
 import com.codepath.apps.restclienttemplate.models.Tweet;
-import com.codepath.apps.restclienttemplate.models.User;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-
-import cz.msebera.android.httpclient.Header;
+import javax.annotation.Nullable;
 
 public class TimelineActivity extends AppCompatActivity {
     private TwitterClient client;
+    LiveData<PagedList<Tweet>> tweets;
     TweetAdapter tweetAdapter;
-    ArrayList<Tweet> tweets;
     RecyclerView rvTweets;
+    TweetDataSourceFactory factory;
     private static int COMPOSE_TWEET = 20;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +35,20 @@ public class TimelineActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         client = TwitterApplication.getRestClient(this);
         rvTweets = findViewById(R.id.rvTweet);
-        tweets = new ArrayList<>();
         tweetAdapter = new TweetAdapter();
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(tweetAdapter);
-        populateTimeline();
+        PagedList.Config config = new PagedList.Config.Builder().setPageSize(12).build();
+        factory = new TweetDataSourceFactory(client);
+
+        tweets = new LivePagedListBuilder(factory, config).build();
+
+        tweets.observe(this, new Observer<PagedList<Tweet>>() {
+            @Override
+            public void onChanged(@Nullable PagedList<Tweet> tweets) {
+                tweetAdapter.submitList(tweets);
+            }
+        });
     }
 
     @Override
@@ -63,50 +70,14 @@ public class TimelineActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == COMPOSE_TWEET && data != null) {
-            Bundle extras = data.getExtras();
-            if(extras != null){
-                String tweetText = extras.getString("new_tweet", "");
-                if(!tweetText.equals("")){
-                    tweets.add(0, new Tweet(tweetText, 123, getResources().getString(R.string.now), new User()));
-                    tweetAdapter.notifyDataSetChanged();
-                }
+            Tweet tweet = data.getParcelableExtra("new_tweet");
+            if(tweet != null){
+                Toast.makeText(this, "@"+ tweet.user.screenName +":" + tweet.body, Toast.LENGTH_LONG).show();
+                factory.tweetLiveData.getValue().invalidate();
+
             }
 
         }
-    }
-
-
-
-
-
-    private void populateTimeline(){
-        client.getHomeTimeline(1, 25, new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                for (int i = 0; i < response.length(); i++){
-                    try {
-                        Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
-                        tweets.add(tweet);
-                        tweetAdapter.addMoreTweets(tweets);
-                    } catch (JSONException e){
-                        e.printStackTrace();
-                    }
-
-                }
-
-            }
-
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-            }
-        });
     }
 
 }

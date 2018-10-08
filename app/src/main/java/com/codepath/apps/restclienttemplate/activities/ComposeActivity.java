@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.TwitterApplication;
 import com.codepath.apps.restclienttemplate.TwitterClient;
-import com.codepath.apps.restclienttemplate.models.User;
+import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
@@ -73,14 +73,10 @@ public class ComposeActivity extends AppCompatActivity implements View.OnClickLi
             client.composeTweet(tweet, inResposeTo, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                    Toast.makeText(getApplicationContext(), getResources().getText(R.string.success), Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getApplicationContext(), getResources().getText(R.string.success), Toast.LENGTH_LONG).show();
                     JSONObject result = parseResult(responseBody);
                     tweetComposer.setText("");
-                    try {
-                        User user = User.fromJSON(result.getJSONObject("user"));
-                    } catch (JSONException e){
-                        e.printStackTrace();
-                    }
+                    Tweet tweet = Tweet.fromJSON(result);
                     Intent data = new Intent();
                     data.putExtra("new_tweet", tweet);
                     setResult(RESULT_OK, data);
