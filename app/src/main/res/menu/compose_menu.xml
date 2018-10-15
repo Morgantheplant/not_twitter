@@ -4,6 +4,7 @@
         android:id="@+id/tweet"
         android:title="@string/tweet"
         app:showAsAction="ifRoom"
+        android:iconTint="@color/lighterBlue"
         >
     </item>
 </menu>

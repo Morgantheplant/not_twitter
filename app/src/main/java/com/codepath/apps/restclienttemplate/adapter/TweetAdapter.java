@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate.adapter;
 
 import android.arch.paging.PagedListAdapter;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.apps.restclienttemplate.R;
+import com.codepath.apps.restclienttemplate.activities.ProfileActivity;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
@@ -38,11 +40,11 @@ public class TweetAdapter extends PagedListAdapter<Tweet, TweetAdapter.ViewHolde
                 }
             };
 
-
+    private Context context;
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
+        context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View tweetView = inflater.inflate(R.layout.item_tweet, parent, false);
@@ -51,7 +53,7 @@ public class TweetAdapter extends PagedListAdapter<Tweet, TweetAdapter.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         Tweet tweet = getItem(position);
         if(tweet == null){
             return;
@@ -69,6 +71,19 @@ public class TweetAdapter extends PagedListAdapter<Tweet, TweetAdapter.ViewHolde
                 .transition(withCrossFade())
                 .apply(options)
                 .into(holder.ivProfileImage);
+        holder.ivProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Tweet tweet = getItem(holder.getAdapterPosition());
+                String sn = tweet.user.screenName;
+                Intent i = new Intent(context, ProfileActivity.class);
+                i.putExtra("screen_name", sn);
+                i.putExtra("twitter_id", tweet.user.uid);
+                context.startActivity(i);
+
+
+            }
+        });
     }
 
 

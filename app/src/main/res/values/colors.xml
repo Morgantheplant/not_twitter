@@ -2,4 +2,10 @@
 <resources>
     <color name="slate">#6e000000</color>
     <color name="slateDarker">#3b3b3b</color>
+    <color name="colorPrimaryDark">#ed4b00</color>
+    <color name="oceanBlue">#064273</color>
+    <color name="lighterBlue">#5eabc0</color>
+    <color name="seafoam">#def3f6</color>
+    <color name="midBlueGreen">#075e6d</color>
+
 </resources>

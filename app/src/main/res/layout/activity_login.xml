@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="#ed4b00"
+    android:background="@color/midBlueGreen"
     tools:context=".LoginActivity"
     >
 
@@ -17,6 +17,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:gravity="center"
+        android:textColor="@color/seafoam"
         android:text="@string/this_is_definitely_not_twitter" />
 
     <Button

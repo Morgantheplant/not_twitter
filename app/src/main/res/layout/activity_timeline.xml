@@ -4,23 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TimelineActivity">
+    tools:context=".activities.TimelineActivity"
+    android:background="@drawable/waves"
+    >
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:minHeight="?attr/actionBarSize"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:titleTextColor="@android:color/white"
-        android:background="?attr/colorPrimaryDark"
-        />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvTweet"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimaryDark"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@android:color/white" />
+
+    <fragment
+        android:id="@+id/fragment_timeline"
+        class="com.codepath.apps.restclienttemplate.fragments.MentionTimelineFragement"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@drawable/bg"
+        android:layout_margin="0dp"
+        android:padding="0dp"
+        android:background="@drawable/waves"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 </android.support.constraint.ConstraintLayout>

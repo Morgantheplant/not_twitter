@@ -44,6 +44,7 @@ public class ComposeActivity extends AppCompatActivity implements View.OnClickLi
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.compose_menu, menu);
         MenuItem composeTweet = menu.findItem(R.id.tweet);
+
         ActionBar ab = getSupportActionBar();
         if(ab != null){
             ab.setTitle(R.string.compose_tweet);
